@@ -1,0 +1,33 @@
+{
+	"h":[
+		"southern",
+		"central & western",
+		"central and western",
+		"wan chai",
+		"eastern"
+	],
+	"f":[
+		"lantau island",
+		"lantao island",
+		"cheung chau"
+	],
+	"k":[
+		"sham shui po",
+		"kowloon city",
+		"kwun tong",
+		"wong tai sin",
+		"yau tsim mong"
+	],
+	"n":[
+		"island",
+		"kwai tsing",
+		"north",
+		"sai kung",
+		"sha tin",
+		"shatin",
+		"tai po",
+		"tsuen wan",
+		"tuen mun",
+		"yuen long"
+	]
+}
