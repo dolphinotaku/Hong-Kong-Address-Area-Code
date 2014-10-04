@@ -1,0 +1,146 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Check Address Area</title>
+<link href="../css/formElement.css" rel="stylesheet">
+<link href="../css/smoothness/jquery-ui-1.10.3.custom.css" rel="stylesheet">
+<link href="../css/bootstrap.min.css" rel="stylesheet">
+
+<script src="../js/jquery-2.0.3.min.js"></script>
+<script src="../js/jquery-ui-1.10.3.custom.js"></script>
+<script type="text/javascript" src="../js/angular.min.js"></script>
+<script type="text/javascript" src="../js/bootstrap.min.js"></script>
+<script type="text/javascript" src="controller.js"></script>
+<style>
+body {
+	font-size: 12px;
+}
+div.sample {
+	border: 1px solid #999;
+	padding: 10px;
+	margin-top: 5px;
+	margin-bottom: 10px;
+	background-image: -moz-linear-gradient(top, #FFFFFF, #F2F2F2);
+	background-image: -ms-linear-gradient(top, #FFFFFF, #F2F2F2);
+	background-image: -o-linear-gradient(top, #FFFFFF, #F2F2F2);
+	background-image: -webkit-linear-gradient(top, #FFFFFF, #F2F2F2);
+	background-image: linear-gradient(top, #FFFFFF, #F2F2F2);
+	border-radius: 10px;
+}
+div.sample input, div.sample textarea, div.sample select {
+	padding: 5px;
+	border: 1px solid #CCC;
+}
+input.area-code {
+	width: 100px;
+}
+</style>
+<script>
+$(function(){
+	//$(".accordion").accordion({ active: false, collapsible: true});
+});
+</script>
+</head>
+<body ng-app="MyApp" style="padding-left: 20px; padding-top: 20px; padding-right: 60px;">
+    <tabs>
+      <pane title="Source">
+	  <div class="accordion" ng-controller="asAtDictionary">
+	    <h3>Current Dictionary</h3>
+	    <div>
+      <div class="row"><span class="col-md-2">Kowloon:</span><textarea cols="100" rows="3" class="col-md-6" ng-model="$root.asAtFileContent['k']"></textarea></div>
+      <div class="row"><span class="col-md-2">Hong Kong:</span><textarea cols="100" rows="3" class="col-md-6" ng-model="$root.asAtFileContent['h']"></textarea></div>
+      <div class="row"><span class="col-md-2">New Territories:</span><textarea cols="100" rows="3" class="col-md-6" ng-model="$root.asAtFileContent['n']"></textarea></div>
+      <div class="row"><span class="col-md-2">Foreign:</span><textarea cols="100" rows="3" class="col-md-6" ng-model="$root.asAtFileContent['f']"></textarea></div>
+      </div>
+	  </div>
+      </pane>
+      <pane title="Current Dictionary">
+	  <div class="accordion" ng-controller="asAtDictionary">
+	    <h3><span id="text">Source code ( Get external JSON...{{getJSONResult}} )</span></h3>
+	    <div id="sourceCode">
+          <pre class="source">{{$root.asAtFileContent | json}}</pre>
+        </div>
+        </div>
+      </pane>
+    </tabs>
+      <hr>
+      <h2>How to use</h2>
+	  This web page help you to quick fill in the excel column.<br>
+	  The data importation of HR2014 program Hu03ni<br>
+      <ol>
+        <li>The dictionary matching table will get by Ajax automatically.</li>
+        <li>Place your list of address copy from excel to the left panel at below</li>
+        <li>The sentence trim by , will display the last part to the right panel at the same time</li>
+        <li>Press the [Identify area code] button, the program will try to identify the area code of each line of address according to the matching dictionary</li>
+        <li>You may assign the area code by your own in the custom area code panel after your press the [Identify area code] button manually.</li>
+      </ol>
+      <h2>How to update the dictionary</h2>
+      <ol>
+        <li>After finish you manual assignment, you may see the dictionary new definition have some new definition</li>
+        <li>You may change and edit in the &quot;Dictionary New Definition&quot; panel</li>
+        <li>Click [Refresh Json Dictionary] button, the generated new json code will include the new dictionary definition</li>
+        <li>Click [Update Json Dictionary] to update the json file by PHP or copy the json code update by yourself</li>
+</ol>
+      <h2>Version 2014-10-03</h2>
+      <ol>
+        <li>Require web server to get JSON file</li>
+        <li>Require PHP server to update the JSON file</li>
+</ol>
+          <hr>
+		  Reference: https://docs.angularjs.org/api/ng/directive/ngModel<br>
+      <table class="resizable" width="1080" border="0" cellspacing="5" cellpadding="0" style="border: 1px solid black;" ng-controller="customAddress">
+  <tr>
+    <td width="640"><h3 class="ui-widget-header">Press your address here</h3>
+    <textarea name="client-address" id="client-address" cols="100" rows="10" ng-model="customAddressText" ></textarea></td>
+    <td width="425"><h3 class="ui-widget-header">Get the substring</h3>
+    <textarea name="address-substring" id="address-substring" cols="50" rows="10" readonly  ng-bind="customAddressText | getAddressLastPart"></textarea></td>
+  </tr>
+</table>
+      <hr>
+      <hr>
+	  <div ng-controller="customAddressAreaCode">
+      <div class="accordion">
+	    <h3>Dictionary New Definition</h3>
+        <div>
+	    <div><label>Kowloon:</label> <textarea cols="100" rows="3" ng-model="toBeK" ng-disabled="isDisabled"></textarea></div>
+	    <div><label>Hong Kong:</label> <textarea cols="100" rows="3" ng-model="toBeHK" ng-disabled="isDisabled"></textarea></div>
+	    <div><label>New Territories:</label> <textarea cols="100" rows="3" ng-model="toBeN" ng-disabled="isDisabled"></textarea></div>
+	    <div><label>Foreign:</label> <textarea cols="100" rows="3" ng-model="toBeF" ng-disabled="isDisabled"></textarea></div>
+	    </div>
+	  </div>
+	  <div class="accordion">
+	    <h3>New Json</h3>
+        <div>
+		  <form action="update-json.php" method="post">
+		  <textarea class="new-source" name="json" rows="10" cols="100" ng-bind="newjson | json"></textarea>
+		  <button type="button" ng-click="refreshNewJson()" ng-disabled="isDisabled">Refresh Json Dictionary</button></textarea>
+		  <button type="submit" ng-click="refreshNewJson()" ng-disabled="isDisabled">Update Json Dictionary</button>
+		  </form>
+		</div>
+	  </div>
+	  	<table width="1080" border="0" cellspacing="0" cellpadding="0" style="border: 1px solid black;">
+	      <tr>
+	      	<td width="640" style="vertical-align: text-top;"><h3>Custom address area code</h3>
+	      	<div id="custom-area-code-td">
+	      	<button ng-click="refreshUI()" ng-disabled="isDisabled">Identify area code</button>
+	      	<div class="sample" style="margin-left: 50px;" ng-repeat="lastPart in lastParts track by $index">
+	      		<input type="text" class="political-area" ng-model="lastPart.text" readonly>
+	      		<select class="area-list" style="margin-left: 50px;" ng-model="lastPart.areaCode" ng-change="customAreaCodeChange(lastPart.text, lastPart.areaCode)" ng-disabled="isDisabled">
+	      		<option value="" selected>--Select--</option>
+	      		<option value="K">Kowloon</option>
+	      		<option value="H">Hong Kong</option>
+	      		<option value="N">New Territories</option>
+	      		<option value="F">Foreign</option>
+	      		</select>
+	      		<input type="text" class="area-code" style="margin-left: 50px; text-transform: uppercase;" ng-model="lastPart.areaCode" ng-change="customAreaCodeChange(lastPart.text, lastPart.areaCode)" ng-disabled="isDisabled">
+	      	</div>
+	      	</div></td>
+	      	<td width="438" style="vertical-align: text-top;"><h3>Area code identification</h3>
+	      	<button ng-click="customAreaCodeChange()" ng-disabled="isDisabled" style="visibility: hidden;">gen area code result list</button><br>
+	      	<textarea cols="40" rows="20" id="to-excel" style="margin-left: 50px;" ng-model="toExcelAreaCode" ng-disabled="isDisabled"></textarea></td>
+	      </tr>
+	    </table>
+	  </div>
+</body>
+</html>
