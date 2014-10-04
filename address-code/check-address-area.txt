@@ -1,34 +1,33 @@
 {
-	"H":[
-		"Southern",
-		"Central & Western",
-		"Central and Western",
-		"Wan Chai",
-		"Eastern"
+	"h":[
+		"southern",
+		"central & western",
+		"central and western",
+		"wan chai",
+		"eastern"
 	],
-	"F":[
-		"Island",
-		"Lantau Island",
-		"Lantao Island",
-		"Cheung Chau"
+	"f":[
+		"lantau island",
+		"lantao island",
+		"cheung chau"
 	],
-	"K":[
-		"Sham Shui Po",
-		"Kowloon City",
-		"Kwun Tong",
-		"Wong Tai Sin",
-		"Yau Tsim Mong"
+	"k":[
+		"sham shui po",
+		"kowloon city",
+		"kwun tong",
+		"wong tai sin",
+		"yau tsim mong"
 	],
-	"N":[
-		"Island",
-		"Kwai Tsing",
-		"North",
-		"Sai Kung",
-		"Sha Tin",
-		"Shatin",
-		"Tai Po",
-		"Tsuen Wan",
-		"Tuen Mun",
-		"Yuen Long"
+	"n":[
+		"island",
+		"kwai tsing",
+		"north",
+		"sai kung",
+		"sha tin",
+		"shatin",
+		"tai po",
+		"tsuen wan",
+		"tuen mun",
+		"yuen long"
 	]
 }
