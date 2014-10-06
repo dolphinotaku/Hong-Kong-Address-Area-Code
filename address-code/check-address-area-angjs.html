@@ -49,7 +49,7 @@ $(function(){
 	    <h3>Current Dictionary</h3>
 	    <div>
       <div class="row"><span class="col-md-2">Kowloon:</span><textarea cols="100" rows="3" class="col-md-6" ng-model="$root.asAtFileContent['k']"></textarea></div>
-      <div class="row"><span class="col-md-2">Hong Kong:</span><textarea cols="100" rows="3" class="col-md-6" ng-model="$root.asAtFileContent['h']"></textarea></div>
+      <div class="row"><span class="col-md-2">Hong Kong Island:</span><textarea cols="100" rows="3" class="col-md-6" ng-model="$root.asAtFileContent['h']"></textarea></div>
       <div class="row"><span class="col-md-2">New Territories:</span><textarea cols="100" rows="3" class="col-md-6" ng-model="$root.asAtFileContent['n']"></textarea></div>
       <div class="row"><span class="col-md-2">Foreign:</span><textarea cols="100" rows="3" class="col-md-6" ng-model="$root.asAtFileContent['f']"></textarea></div>
       </div>
@@ -104,7 +104,7 @@ $(function(){
 	    <h3>Dictionary New Definition</h3>
         <div>
 	    <div><label>Kowloon:</label> <textarea cols="100" rows="3" ng-model="toBeK" ng-disabled="isDisabled"></textarea></div>
-	    <div><label>Hong Kong:</label> <textarea cols="100" rows="3" ng-model="toBeHK" ng-disabled="isDisabled"></textarea></div>
+	    <div><label>Hong Kong Island:</label> <textarea cols="100" rows="3" ng-model="toBeHK" ng-disabled="isDisabled"></textarea></div>
 	    <div><label>New Territories:</label> <textarea cols="100" rows="3" ng-model="toBeN" ng-disabled="isDisabled"></textarea></div>
 	    <div><label>Foreign:</label> <textarea cols="100" rows="3" ng-model="toBeF" ng-disabled="isDisabled"></textarea></div>
 	    </div>
@@ -129,7 +129,7 @@ $(function(){
 	      		<select class="area-list" style="margin-left: 50px;" ng-model="lastPart.areaCode" ng-change="customAreaCodeChange(lastPart.text, lastPart.areaCode)" ng-disabled="isDisabled">
 	      		<option value="" selected>--Select--</option>
 	      		<option value="K">Kowloon</option>
-	      		<option value="H">Hong Kong</option>
+	      		<option value="H">Hong Kong Island</option>
 	      		<option value="N">New Territories</option>
 	      		<option value="F">Foreign</option>
 	      		</select>

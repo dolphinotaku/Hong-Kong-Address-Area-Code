@@ -5,20 +5,6 @@
 <title>Check Address Area</title>
 <link href="../css/formElement.css" rel="stylesheet">
 <link href="../css/smoothness/jquery-ui-1.10.3.custom.css" rel="stylesheet">
-<?php
-
-if(isset($_POST['json'])){
-	
-$fileName = "check-address-area.txt";
-//$file = fopen($fn, "a+");
-//$size = filesize($fn);
-	//fwrite($file, $_POST['json']);
-
-//$text = fread($file, $size);
-//fclose($file);
-file_put_contents($fileName, $_POST['json']);
-}
-?>
 <script src="../js/jquery-2.0.3.min.js"></script>
 <script src="../js/jquery-ui-1.10.3.custom.js"></script>
 <script>
@@ -85,7 +71,6 @@ function ExtractJson2Table(){
 	});
 }
 	$(function(){
-		//$(".accordion").accordion();
 		$(".accordion").accordion({ active: false, collapsible: true});
 		$( ".resizable" ).resizable();
 				
@@ -165,9 +150,7 @@ function ExtractJson2Table(){
 				addressLastLine = addressLastLine.trim();
 				$("#address-substring").val($("#address-substring").val()+addressLastLine+"\n");
 				
-				//list = $(".area-list");
 				foundCode = "";
-				
 				
 				$.each(obj, function(key, value) {
 					isFound = value.indexOf(addressLastLine.toLowerCase());
@@ -183,8 +166,6 @@ function ExtractJson2Table(){
 				$copy.find(".political-area").val(addressLastLine);
 				$copy.find(".area-code").val(foundCode);
 				
-				//if(foundCode != "")
-				//$copy.find(".area-list option[value='"+foundCode+"']").prop("selected", true);
 				$copy.show().appendTo("#custom-area-code-td");
 				
 				$("#custom-area-code-td div:last-child .area-list option[value='"+foundCode+"'").prop("selected", true);
@@ -194,11 +175,25 @@ function ExtractJson2Table(){
 					$copy.find("select").prop("disabled", true).addClass("ui-state-disabled");
 					$copy.find(".area-code").prop("readonly", true).addClass("ui-state-disabled");
 				}
-				/*
-				copy = "<div><input type='text' value='"+text+"'><select style='margin-left: 50px;'>"+list.html()+"</select><input type='text' value='"+foundCode+"'></div>";
-				$("#custom-area-code-td").append("<div class='auto-gen'>"+copy+"</div>");
-				*/
 			}
+			
+			$(".lock").click(function(){
+				$(this).next().show();
+				var parent = $(this).parents("div.sample");
+				parent.find(".political-area").prop("readonly", true).addClass("ui-state-disabled");
+				parent.find("select").prop("disabled", true).addClass("ui-state-disabled");
+				parent.find(".area-code").prop("readonly", true).addClass("ui-state-disabled");
+				$(this).hide();
+			});
+			
+			$(".unlock").click(function(){
+				$(this).prev().show();
+				var parent = $(this).parents("div.sample");
+				parent.find(".political-area").prop("readonly", false).removeClass("ui-state-disabled");
+				parent.find("select").prop("disabled", false).removeClass("ui-state-disabled");
+				parent.find(".area-code").prop("readonly", false).removeClass("ui-state-disabled");
+				$(this).hide();
+			});
 			
 			$(".area-list").change(function(){
 				
@@ -209,34 +204,12 @@ function ExtractJson2Table(){
 			$("#custom-area-code-td .area-code").change(function(e) {
 				var address = $(this).prev(".political-area").val();
 				var areaCode = $(this).val();
-				/*
-				$("#to-excel").val("");
-				$("#custom-area-code-td .area-code").each(function(index, element) {
-					var value = $(element).val();
-					if($("#to-excel").val()==""){
-						$("#to-excel").val(value);
-					}else{
-					$("#to-excel").val($("#to-excel").val()+"\n"+value);
-					}
-				});
-				*/
 				CustomAreaCode(address, areaCode);
 			});
 			
 			$("#custom-area-code-td .area-list").change(function(e) {
 				var address = $(this).prev(".political-area").val();
 				var areaCode = $(this).val();
-				/*
-				$("#to-excel").val("");
-				$("#custom-area-code-td .area-code").each(function(index, element) {
-					var value = $(element).val();
-					if($("#to-excel").val()==""){
-						$("#to-excel").val(value);
-					}else{
-					$("#to-excel").val($("#to-excel").val()+"\n"+value);
-					}
-				});
-				*/
 				CustomAreaCode(address, areaCode);
 			});
 			
@@ -246,16 +219,7 @@ function ExtractJson2Table(){
 					if($("#to-excel").val()==""){
 						$("#to-excel").val(value);
 					}else{
-						
 						$("#to-excel").val($("#to-excel").val()+"\n"+value);
-						/*
-						if(value==""){
-						$("#to-excel").val($("#to-excel").val()+"\n\n");
-						}else{
-							
-						$("#to-excel").val($("#to-excel").val()+"\n"+value);
-						}
-						*/
 					}
 			});
 		
@@ -335,6 +299,7 @@ body {
 	font-size: 12px;
 }
 div.sample {
+	margin-left: 50px; display: none;
 	border: 1px solid #999;
 	padding: 10px;
 	margin-top: 5px;
@@ -345,6 +310,7 @@ div.sample {
 	background-image: -webkit-linear-gradient(top, #FFFFFF, #F2F2F2);
 	background-image: linear-gradient(top, #FFFFFF, #F2F2F2);
 	border-radius: 10px;
+	position: relative;
 }
 div.sample input, div.sample textarea, div.sample select {
 	padding: 5px;
@@ -352,6 +318,24 @@ div.sample input, div.sample textarea, div.sample select {
 }
 input.area-code {
 	width: 100px;
+}
+button.lock, input.lock {
+	display: block;
+	width: 48px;
+	height: 48px;
+	background-image: url("../images/lock_closed.png");
+	position: absolute;
+	left: -50px;
+	top: 3px;
+}
+button.unlock, input.unlock {
+	display: block;
+	width: 48px;
+	height: 48px;
+	background-image: url("../images/lock_open.png");
+	position: absolute;
+	left: -50px;
+	top: 3px;
 }
 </style>
 </head>
@@ -399,7 +383,7 @@ input.area-code {
 	    <h3>Current Dictionary</h3>
 	    <div>
       <div>Kowloon: <textarea class="searchMe" id="K" cols="100" rows="3"></textarea></div>
-      <div>Hong Kong: <textarea class="searchMe" id="H" cols="100" rows="3"></textarea></div>
+      <div>Hong Kong Island: <textarea class="searchMe" id="H" cols="100" rows="3"></textarea></div>
       <div>New Territories: <textarea class="searchMe" id="N" cols="100" rows="3"></textarea></div>
       <div>Foreign: <textarea class="searchMe" id="F" cols="100" rows="3"></textarea></div>
       </div>
@@ -440,26 +424,28 @@ input.area-code {
 	    <h3>Dictionary New Definition</h3>
         <div>
       <div><label>Kowloon:</label> <textarea class="updateMe k" id="updateMe-K" cols="100" rows="3"></textarea></div>
-      <div><label>Hong Kong:</label> <textarea class="updateMe h" id="updateMe-H" cols="100" rows="3"></textarea></div>
+      <div><label>Hong Kong Island:</label> <textarea class="updateMe h" id="updateMe-H" cols="100" rows="3"></textarea></div>
       <div><label>New Territories:</label> <textarea class="updateMe n" id="updateMe-N" cols="100" rows="3"></textarea></div>
       <div><label>Foreign:</label> <textarea class="updateMe f" id="updateMe-F" cols="100" rows="3"></textarea></div>
       </div>
 	  </div>
 	  <div class="accordion">
 	    <h3>New Json</h3>
-      <div><form action="#" method="post">
+      <div><form action="update-json.php" method="post">
       <textarea class="new-source" name="json" rows="10" cols="100"></textarea>
 <button type="submit">submit</button></form></div>
 </div>
       <button class="update-dictionary">Update Dictionary</button>
       <button class="confirm-update">Generate New JSON</button>
       <hr>
-<div class="sample" style="margin-left: 50px; display: none;">
+<div class="sample" style="">
+	<input class="lock" type="button">
+	<input class="unlock" type="button">
     <input type="text" class="political-area">
     <select class="area-list" style="margin-left: 50px;">
       <option value="" selected>--Select--</option>
       <option value="K">Kowloon</option>
-      <option value="H">Hong Kong</option>
+      <option value="H">Hong Kong Island</option>
       <option value="N">New Territories</option>
       <option value="F">Foreign</option>
     </select>
