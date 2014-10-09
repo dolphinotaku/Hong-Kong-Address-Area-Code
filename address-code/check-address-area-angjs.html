@@ -44,7 +44,7 @@ $(function(){
 </head>
 <body ng-app="MyApp" style="padding-left: 20px; padding-top: 20px; padding-right: 60px;">
     <tabs>
-      <pane title="Source">
+      <pane title="Current Dictionary">
 	  <div class="accordion" ng-controller="asAtDictionary">
 	    <h3>Current Dictionary</h3>
 	    <div>
@@ -55,9 +55,9 @@ $(function(){
       </div>
 	  </div>
       </pane>
-      <pane title="Current Dictionary">
+      <pane title="Source code">
 	  <div class="accordion" ng-controller="asAtDictionary">
-	    <h3><span id="text">Source code ( Get external JSON...{{getJSONResult}} )</span></h3>
+	    <h3>Source code ( Get external JSON...{{getJSONResult}} )</h3>
 	    <div id="sourceCode">
           <pre class="source">{{$root.asAtFileContent | json}}</pre>
         </div>
