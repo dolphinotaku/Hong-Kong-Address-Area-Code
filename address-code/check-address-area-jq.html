@@ -86,17 +86,9 @@ function ExtractJson2Table(){
 			form = form.find("#client-address").val();
             aKeyhWasType(form);
         });
-        var timeoutId;
-        // Autosave input box's to database during pause in typing?
-        // http://stackoverflow.com/questions/19910843/autosave-input-boxs-to-database-during-pause-in-typing
-        // http://www.w3schools.com/jsref/met_win_cleartimeout.asp
         function aKeyhWasType(form) {
             console.log(arguments.callee.name + " function start");
-            clearTimeout(timeoutId);
-            timeoutId = setTimeout(function () {
-                // Runs 1 second (1000 ms) after the last change
-                getTheSubstring(form);
-            }, 3000);
+			getTheSubstring(form);
         }
 		
 		function CustomAreaCode(address, areaCode){
