@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <title>Check Address Area</title>
-<link href="../css/formElement.css" rel="stylesheet">
-<link href="../css/smoothness/jquery-ui-1.10.3.custom.css" rel="stylesheet">
-<script src="../js/jquery-2.0.3.min.js"></script>
-<script src="../js/jquery-ui-1.10.3.custom.js"></script>
+<!-- <link href="../css/formElement.css" rel="stylesheet"> -->
+<link href="../third-party/jqueryui/smoothness/jquery-ui-1.10.3.custom.css" rel="stylesheet">
+<script src="../third-party/jquery-2.1.1.min.js"></script>
+<script src="../third-party/jqueryui/jquery-ui-1.10.3.custom.js"></script>
 <script>
 var obj;
 var jsonTextFile = "check-address-area.txt";
@@ -86,17 +86,9 @@ function ExtractJson2Table(){
 			form = form.find("#client-address").val();
             aKeyhWasType(form);
         });
-        var timeoutId;
-        // Autosave input box's to database during pause in typing?
-        // http://stackoverflow.com/questions/19910843/autosave-input-boxs-to-database-during-pause-in-typing
-        // http://www.w3schools.com/jsref/met_win_cleartimeout.asp
         function aKeyhWasType(form) {
             console.log(arguments.callee.name + " function start");
-            clearTimeout(timeoutId);
-            timeoutId = setTimeout(function () {
-                // Runs 1 second (1000 ms) after the last change
-                getTheSubstring(form);
-            }, 3000);
+			getTheSubstring(form);
         }
 		
 		function CustomAreaCode(address, areaCode){
@@ -299,7 +291,8 @@ body {
 	font-size: 12px;
 }
 div.sample {
-	margin-left: 50px; display: none;
+	margin-left: 50px;
+	display: none;
 	border: 1px solid #999;
 	padding: 10px;
 	margin-top: 5px;
@@ -319,23 +312,21 @@ div.sample input, div.sample textarea, div.sample select {
 input.area-code {
 	width: 100px;
 }
-button.lock, input.lock {
+.lock, .unlock {
 	display: block;
 	width: 48px;
 	height: 48px;
-	background-image: url("../images/lock_closed.png");
 	position: absolute;
 	left: -50px;
 	top: 3px;
+	background-repeat: no-repeat;
+	background-position: center center;
+}
+button.lock, input.lock {
+	background-image: url("../images/lock_closed.png");
 }
 button.unlock, input.unlock {
-	display: block;
-	width: 48px;
-	height: 48px;
 	background-image: url("../images/lock_open.png");
-	position: absolute;
-	left: -50px;
-	top: 3px;
 }
 </style>
 </head>
