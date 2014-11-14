@@ -89,36 +89,17 @@ $(function(){
 </ol>
           <hr>
 		  Reference: https://docs.angularjs.org/api/ng/directive/ngModel<br>
-      <table class="resizable" width="1080" border="0" cellspacing="5" cellpadding="0" style="border: 1px solid black;" ng-controller="customAddress">
+		  <div ng-controller="customAddress">
+      <table class="resizable" width="1080" border="0" cellspacing="5" cellpadding="0" style="border: 1px solid black;">
   <tr>
     <td width="640"><h3 class="ui-widget-header">Press your address here</h3>
-    <textarea name="client-address" id="client-address" cols="100" rows="10" ng-model="customAddressText" ></textarea></td>
+    <textarea name="client-address" id="client-address" cols="100" rows="10" ng-model="customAddressText" ng-change="getAddressLastPart(customAddressText)"></textarea></td>
     <td width="425"><h3 class="ui-widget-header">Get the substring</h3>
-    <textarea name="address-substring" id="address-substring" cols="50" rows="10" readonly  ng-bind="customAddressText | getAddressLastPart"></textarea></td>
+    <textarea name="address-substring" id="address-substring" cols="50" rows="10" readonly  ng-bind="addressLastPart"></textarea></td>
   </tr>
 </table>
       <hr>
-      <hr>
-	  <div ng-controller="customAddressAreaCode">
-      <div class="accordion">
-	    <h3>Dictionary New Definition</h3>
-        <div>
-	    <div><label>Kowloon:</label> <textarea cols="100" rows="3" ng-model="toBeK" ng-disabled="isDisabled"></textarea></div>
-	    <div><label>Hong Kong Island:</label> <textarea cols="100" rows="3" ng-model="toBeHK" ng-disabled="isDisabled"></textarea></div>
-	    <div><label>New Territories:</label> <textarea cols="100" rows="3" ng-model="toBeN" ng-disabled="isDisabled"></textarea></div>
-	    <div><label>Foreign:</label> <textarea cols="100" rows="3" ng-model="toBeF" ng-disabled="isDisabled"></textarea></div>
-	    </div>
-	  </div>
-	  <div class="accordion">
-	    <h3>New Json</h3>
-        <div>
-		  <form action="update-json.php" method="post">
-		  <textarea class="new-source" name="json" rows="10" cols="100" ng-bind="newjson | json"></textarea>
-		  <button type="button" ng-click="refreshNewJson()" ng-disabled="isDisabled">Refresh Json Dictionary</button></textarea>
-		  <button type="submit" ng-click="refreshNewJson()">Update Json Dictionary</button>
-		  </form>
-		</div>
-	  </div>
+	  
 	  	<table width="1080" border="0" cellspacing="0" cellpadding="0" style="border: 1px solid black;">
 	      <tr>
 	      	<td width="640" style="vertical-align: text-top;"><h3>Custom address area code</h3>
@@ -141,6 +122,29 @@ $(function(){
 	      	<textarea cols="40" rows="20" id="to-excel" style="margin-left: 50px;" ng-model="toExcelAreaCode" ng-disabled="isDisabled"></textarea></td>
 	      </tr>
 	    </table>
+		
+      <hr>
+	  
+      <div class="accordion">
+	    <h3>Dictionary New Definition</h3>
+        <div>
+	    <div><label>Kowloon:</label> <textarea cols="100" rows="3" ng-model="toBeK" ng-disabled="isDisabled"></textarea></div>
+	    <div><label>Hong Kong Island:</label> <textarea cols="100" rows="3" ng-model="toBeHK" ng-disabled="isDisabled"></textarea></div>
+	    <div><label>New Territories:</label> <textarea cols="100" rows="3" ng-model="toBeN" ng-disabled="isDisabled"></textarea></div>
+	    <div><label>Foreign:</label> <textarea cols="100" rows="3" ng-model="toBeF" ng-disabled="isDisabled"></textarea></div>
+	    </div>
 	  </div>
+	  <div class="accordion">
+	    <h3>New Json</h3>
+        <div>
+		  <form action="update-json.php" method="post">
+		  <textarea class="new-source" name="json" rows="10" cols="100" ng-bind="newjson | json"></textarea><br>
+		  <button type="button" ng-click="refreshNewJson()" ng-disabled="isDisabled">Refresh Json Dictionary</button></textarea>
+		  <button type="submit" ng-click="refreshNewJson()">Update Json Dictionary</button>
+		  </form>
+		</div>
+	  </div>
+</div>
+
 </body>
 </html>
