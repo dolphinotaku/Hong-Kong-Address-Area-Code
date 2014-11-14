@@ -29,14 +29,12 @@ app.controller("customAddress", function($scope, CustomAddressLastPart, $rootSco
 	$scope.customAddressText = "";
 	$scope.addressLastPart = "";
 	$scope.lastParts = [];
-		
-	$scope.toBeK = "";
-	$scope.toBeHK = "";
-	$scope.toBeN = "";
-	$scope.toBeF = "";
+	
+	$scope.toBe = {};
 	$scope.newjson = "";
 	
 	$scope.isDisabled = false;
+	$scope.isLock = [];
 	
 	$scope.matchAreaCode = new Array();
 	$scope.toExcelAreaCode = "";
@@ -71,6 +69,7 @@ app.controller("customAddress", function($scope, CustomAddressLastPart, $rootSco
 			var tempAreaCode = "";
 			
 			tempLastParts[i] = {};
+			$scope.isLock[i] = false;
 			// assign last part address text
 			tempLastParts[i].text = lastPart;
 			
@@ -78,6 +77,7 @@ app.controller("customAddress", function($scope, CustomAddressLastPart, $rootSco
 			for(key in $rootScope.asAtFileContent){
 				if($rootScope.asAtFileContent[key].indexOf(lastPart)>=0){
 					tempAreaCode = key.toUpperCase();
+					$scope.isLock[i] = true;
 				}
 			}
 			
@@ -85,7 +85,7 @@ app.controller("customAddress", function($scope, CustomAddressLastPart, $rootSco
 			if(tempAreaCode!=""){
 					$scope.toExcelAreaCode += tempAreaCode+"\n";
 			}else{
-					$scope.toExcelAreaCode += "\n";
+					$scope.toExcelAreaCode += "\r\n";
 			}
 			// assign the identified area code
 			tempLastParts[i].areaCode = tempAreaCode;
@@ -96,15 +96,26 @@ app.controller("customAddress", function($scope, CustomAddressLastPart, $rootSco
 	}
 	// End - refresh UI
 	
-	// trigger when user change Area Code on selection box / input box
-	$scope.customAreaCodeChange = function(address, areaCode){
-		var tempToExcelAreaCode="";
-		$scope.toBeK = "";
-		$scope.toBeHK = "";
-		$scope.toBeN = "";
-		$scope.toBeF = "";
+	// trigger when user click lock/unlock button
+	$scope.reverseLock = function(statusShould, lockIndex){
+		var toBeLockStatus = false;
+		var address = $scope.lastParts[lockIndex].text;
 		
-		var json = CustomAddressLastPart.getFileContent();
+		if(statusShould == "lock")
+			toBeLockStatus = true;
+		$scope.isLock[lockIndex] = toBeLockStatus;
+		// search the same address and sync the lock status
+		angular.forEach($('input.political-area'), function(element, index){
+			var otherAddress = $(element).val();
+			if(otherAddress == address){
+				$scope.isLock[index] = toBeLockStatus;
+			}
+		});
+	}
+	
+	// trigger when user change Area Code on selection box / input box
+	$scope.customAreaCodeChange = function(address, areaCode, currentIndex){
+		var tempToExcelAreaCode="";
 			
 		// search the same address and sync the selection
 		angular.forEach($('input.political-area'), function(element){
@@ -138,44 +149,14 @@ app.controller("customAddress", function($scope, CustomAddressLastPart, $rootSco
 			
 			// prepare to be dictionary
 			if(!isExistsInCurrentDictionary){
-				var newDictionary="";
-				switch(currentAreaCode){
-					case "K":
-						newDictionary = $scope.toBeK;
-						if(newDictionary.indexOf(currentAddress) == -1){
-							if($scope.toBeK.trim() == "")
-								$scope.toBeK = currentAddress;
-							else
-								$scope.toBeK += ","+currentAddress;
-						}
-						break;
-					case "H":
-						newDictionary = $scope.toBeHK;
-						if(newDictionary.indexOf(currentAddress) == -1){
-							if($scope.toBeHK.trim() == "")
-								$scope.toBeHK = currentAddress;
-							else
-								$scope.toBeHK += ","+currentAddress;
-						}
-						break;
-					case "N":
-						newDictionary = $scope.toBeN;
-						if(newDictionary.indexOf(currentAddress) == -1){
-							if($scope.toBeN.trim() == "")
-								$scope.toBeN = currentAddress;
-							else
-								$scope.toBeN += ","+currentAddress;
-						}
-						break;
-					case "F":
-						newDictionary = $scope.toBeF;
-						if(newDictionary.indexOf(currentAddress) == -1){
-							if($scope.toBeF.trim() == "")
-								$scope.toBeF = currentAddress;
-							else
-								$scope.toBeF += ","+currentAddress;
-						}
-						break;
+				if(typeof $scope.toBe[currentAreaCode] == "undefined")
+					$scope.toBe[currentAreaCode] = "";
+				var	newDictionary = $scope.toBe[currentAreaCode];				
+				if(newDictionary.indexOf(currentAddress) == -1){
+					if($scope.toBe[currentAreaCode].trim() == "")
+						$scope.toBe[currentAreaCode] = currentAddress;
+					else
+						$scope.toBe[currentAreaCode] += ","+currentAddress;
 				}
 			}
 			
@@ -183,11 +164,22 @@ app.controller("customAddress", function($scope, CustomAddressLastPart, $rootSco
 		
 		angular.forEach($('select.area-list'), function(node){
 				// refresh area code result list
-				tempToExcelAreaCode+=$(node).val()+"\n";
+				tempToExcelAreaCode+=$(node).val()+"\r\n";
 			});
 		$scope.toExcelAreaCode = tempToExcelAreaCode.trim();
 	}
 	
+	// is show refresh/update json button
+	$scope.isToBeNotNull = function(){
+		var isNotNull = false;
+		for(var key in $scope.toBe){
+			if($scope.toBe[key] != ""){
+				isNotNull = true;
+				break;
+			}
+		}
+		return isNotNull;
+	}
 	
 	// refresh new json
 	$scope.refreshNewJson = function(){
@@ -195,57 +187,16 @@ app.controller("customAddress", function($scope, CustomAddressLastPart, $rootSco
 		//$scope.newjson = toBeFileContent;
 		var toBeFileContent = $rootScope.asAtFileContent
 		//$scope.newjson = $rootScope.asAtFileContent;
-		var toBeDictionary = $scope.toBeK;
-		if(toBeDictionary!=""){
-			var toBeKLines = toBeDictionary.split(",");
-			for(key in toBeKLines){
-				if(toBeKLines[key] == null || toBeKLines[key] == "")
+		
+		for(var areaCodeIndex in $scope.toBe){
+			var newDefinition = $scope.toBe[areaCodeIndex];
+			var breakToLines = newDefinition.split(",");
+			for (var index in breakToLines){
+				if(breakToLines[index] == null || breakToLines[index] == "")
 					continue;
-				//var tempDictionary = $scope.newjson['k'];
-				var tempDictionary = toBeFileContent['k'];
-				if(tempDictionary.indexOf(toBeKLines[key])==-1)
-					//$scope.newjson['k'].push(toBeKLines[key]);
-					toBeFileContent['k'].push(toBeKLines[key]);
-			}
-		}
-		var toBeDictionary = $scope.toBeHK;
-		if(toBeDictionary!=""){
-			var toBeKLines = toBeDictionary.split(",");
-			for(key in toBeKLines){
-				if(toBeKLines[key] == null || toBeKLines[key] == "")
-					continue;
-				//var tempDictionary = $scope.newjson['h'];
-				var tempDictionary = toBeFileContent['h'];
-				if(tempDictionary.indexOf(toBeKLines[key])==-1)
-					//$scope.newjson['h'].push(toBeKLines[key]);
-					
-					toBeFileContent['h'].push(toBeKLines[key]);
-			}
-		}
-		var toBeDictionary = $scope.toBeN;
-		if(toBeDictionary!=""){
-			var toBeKLines = toBeDictionary.split(",");
-			for(key in toBeKLines){
-				if(toBeKLines[key] == null || toBeKLines[key] == "")
-					continue;
-				//var tempDictionary = $scope.newjson['n'];
-				var tempDictionary = toBeFileContent['n'];
-				if(tempDictionary.indexOf(toBeKLines[key])==-1)
-					//$scope.newjson['n'].push(toBeKLines[key]);
-					toBeFileContent['n'].push(toBeKLines[key]);
-			}
-		}
-		var toBeDictionary = $scope.toBeF;
-		if(toBeDictionary!=""){
-			var toBeKLines = toBeDictionary.split(",");
-			for(key in toBeKLines){
-				if(toBeKLines[key] == null || toBeKLines[key] == "")
-					continue;
-				//var tempDictionary = $scope.newjson['f'];
-				var tempDictionary = toBeFileContent['f'];
-				if(tempDictionary.indexOf(toBeKLines[key])==-1)
-					//$scope.newjson['f'].push(toBeKLines[key]);
-					toBeFileContent['f'].push(toBeKLines[key]);
+				var tempDictionary = toBeFileContent[areaCodeIndex.toLowerCase()];
+				if(tempDictionary.indexOf(breakToLines[index])==-1)
+					toBeFileContent['k'].push(breakToLines[index]);
 			}
 		}
 		
